@@ -1,0 +1,62 @@
+﻿#!/bin/bash
+# Author: Dirección de tecnología educativa
+# License: GPL
+DRBL_SCRIPT_PATH="${DRBL_SCRIPT_PATH:-/usr/share/drbl}"
+ROOT_DISK="sda"
+FULL_IMG_NAME="pad-v1-img"
+SEVEN_IMG="seven-img"
+HUAYRA_IMG="gnu-img"
+IMAGES_POINT="/home/rdisk/home/"
+
+. $DRBL_SCRIPT_PATH/sbin/drbl-conf-functions
+. /etc/drbl/drbl-ocs.conf
+. $DRBL_SCRIPT_PATH/sbin/ocs-functions
+
+# load the setting for clonezilla live.
+[ -e /etc/ocs/ocs-live.conf ] && . /etc/ocs/ocs-live.conf
+
+# bind the live image repository
+echo "Mounting the live-image point"
+mount --bind /live/image/home/partimag/ /home/partimag/
+
+echo "Init first cloning"
+ocs-sr -g auto -e1 auto -e2 -r -j2 -k1 -p true restoredisk $FULL_IMG_NAME $ROOT_DISK
+
+# now umount the current live image
+echo "Leaving the live-image point"
+umount /home/partimag
+
+reset
+
+# mount the restored image repository
+echo "Mounting the restored disk"
+mkdir -p /home/rdisk/ 
+mount /dev/${ROOT_DISK}6 /home/rdisk/
+mount --bind $IMAGES_POINT /home/partimag/
+echo "Using the restored swap point"
+swapon /dev/${ROOT_DISK}5
+
+
+echo "Restoring the Windows image"
+
+ocs-sr -g auto -e1 auto -b -e2 -r -j2 -k -p true restoreparts seven-img ${ROOT_DISK}2
+
+echo "Restoring the Huayra image"
+
+ocs-sr -g auto -e1 auto -e2 -b -r -j2 -k -p true restoreparts gnu-img ${ROOT_DISK}3
+
+echo "#############################"
+echo "# JOBS APPLIED SUCCESSFULLY #"
+echo "#############################"
+
+echo.
+
+read -p "Ready to shutdown"
+
+# exit
+
+reset
+
+shutdown -h now
+
+exit 0
