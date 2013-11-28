@@ -9,7 +9,7 @@ Archivos de configuración imagenes de clonezilla para automatizar el proceso.
  - 3 Copiar los archivos de imagen dentro de `/USB/home/partimag`
  - 4 Capiar cualquiera de las versiones que se desea dentro del USB creado (reemplazando los archivos)
 
-  *NOTA: La version `repair` no necesita imagenes, utiliza la de la netbook.*
+*NOTA: La version `repair` no necesita imagenes, utiliza la de la netbook.*
 
 ### Images
 
