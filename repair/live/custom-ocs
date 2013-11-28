@@ -1,0 +1,25 @@
+﻿#!/bin/bash
+# Author: Dirección de tecnología educativa
+# License: GPL
+DRBL_SCRIPT_PATH="${DRBL_SCRIPT_PATH:-/usr/share/drbl}"
+ROOT_DISK="sda"
+IMAGES_POINT="/home/rdisk/home/"
+
+. $DRBL_SCRIPT_PATH/sbin/drbl-conf-functions
+. /etc/drbl/drbl-ocs.conf
+. $DRBL_SCRIPT_PATH/sbin/ocs-functions
+
+# load the setting for clonezilla live.
+[ -e /etc/ocs/ocs-live.conf ] && . /etc/ocs/ocs-live.conf
+
+reset
+
+# mount the restored image repository
+echo "Mounting the restored disk"
+mkdir -p /home/rdisk/ 
+mount /dev/${ROOT_DISK}5 /home/rdisk/
+mount --bind $IMAGES_POINT /home/partimag/
+echo "Using the restored swap point"
+swapon /dev/${ROOT_DISK}6
+
+sh /live/image/root/restore.sh

@@ -1,0 +1,1 @@
+ocs-sr  -g auto -e1 auto -e2 -b -r -j2 -k -p true restoreparts seven-img sda2
