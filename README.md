@@ -12,4 +12,4 @@ Archivos de configuración imagenes de clonezilla para automatizar el proceso.
 ### Images
 
  - `./pad/`     for PAD nets
- - `./repair/`  for Conectar Igualdas nets
+ - `./repair/`  for Conectar Igualdad nets
