@@ -1,9 +1,9 @@
-#!/bin/sh
+﻿#!/bin/sh
 
 _RAM=2
 _DISK=/dev/sda
 
-echo "Retrieving disk information"
+echo "Retriving disk information"
 
 _TSIZE_MiB=$(parted $_DISK unit MiB print | grep "Disk $_DISK:" | awk '{print $3}')
 
@@ -28,58 +28,61 @@ _data_gb=$(($_data_MiB/1024))
 _ext_MiB=$(($_swap_MiB+$_data_MiB))
 
 echo "PARTITIONS TO MAKE"
-echo "[ WIN ${_win_gb}GB ][ GNU ${_gnu_gb}GB ][[ SWAP ${_swap_gb}GB ][
-DATA ${_data_gb}GB ]][ RECOVERY 20GB]"
+echo "[ WIN ${_win_gb}GB ][ GNU ${_gnu_gb}GB ][[ SWAP ${_swap_gb}GB ][ DATA ${_data_gb}GB ]][ RECOVERY 20GB]"
 
 echo ""
 echo "Creating the partition table"
-parted -a optimal ${_DISK} --script -- mklabel msdos
+parted --script ${_DISK} mktable msdos
 echo ""
 
-_from=0
+# OS partition
+_from=1
 _to=$(($_from+$_win_MiB))
 echo "${_DISK}1: primary ntfs WIN $_from $_to"
-parted -a optimal ${_DISK} --script -- mkpart primary ntfs 2048s $_from $_to
-# parted --script ${_DISK} name 1 'WIN'
+parted -a cylinder ${_DISK} --script -- unit MiB mkpart primary ntfs $_from $_to
+mkfs.ntfs -L WIN -Q ${_DISK}1
 echo ""
 
-exit 0
 _from=$(($_to+1))
 _to=$(($_from+$_gnu_MiB))
 echo "${_DISK}2: primary ext4 GNU $_from $_to"
-parted --script ${_DISK} mkpart primary ext4 GNU $_from $_to
+parted -a cylinder ${_DISK} --script -- unit MiB mkpart primary ext4 $_from $_to
+mkfs.ext4 -L GNU ${_DISK}2
 echo ""
 
-# save logical pints
+# save logical pionts
 _from_l=$(($_to+1))
 
 _from=$(($_to+1))
 _to=$(($_from+$_ext_MiB))
 _to_e=$(($_from+$_ext_MiB))
 echo "${_DISK}3: extended $_from $_to"
-parted --script ${_DISK} mkpart extended $_from $_to
+parted -a cylinder ${_DISK} --script -- unit MiB mkpart extended $_from $_to
 echo ""
 
 # save poit for recovery partition
 _from_r=$(($_to+1))
 _to_r=$(($_from_r+$_rec_MiB))
 
-# logical partition
 
+# logical partition
 _from=$_from_l
 _to=$(($_from+$_swap_MiB))
 echo "${_DISK}4: logical linux-swap SWAP $_from $_to"
-parted --script ${_DISK} mkpart logical linux-swap SWAP $_from $_to
+parted -a cylinder ${_DISK} --script -- unit MiB mkpart logical linux-swap $_from $_to
+mkswap -L SWAP ${_DISK}5
 echo ""
 
 _from=$(($_to+1))
 _to=$(($_from+$_data_MiB))
 echo "${_DISK}5: logical ntfs DATA $_from $_to_e"
-parted --script ${_DISK} mkpart logical ntfs DATA $_from $_to_e
+parted -a cylinder ${_DISK} --script -- unit MiB mkpart logical ntfs $_from $_to_e
+mkfs.ntfs -L DATA -Q ${_DISK}6
 echo ""
 
 # recovery partition
 echo "${_DISK}6: primary ext4 RECOVERY $_from_r $_TSIZE"
-parted --script ${_DISK} mkpart primary ext4 RECOVERY $_from_r $_TSIZE
-parted --script ${_DISK} set 6 boot on
+parted ${_DISK} --script -- unit MiB mkpart primary ext4 $_from_r $_TSIZE
+parted ${_DISK} --script set 6 boot on
+mkfs.ext4 -L RECOVERY ${_DISK}4
 echo ""
