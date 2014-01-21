@@ -4,8 +4,8 @@
 DRBL_SCRIPT_PATH="${DRBL_SCRIPT_PATH:-/usr/share/drbl}"
 ROOT_DISK="sda"
 FULL_IMG_NAME="pad-v2a-img"
-SEVEN_IMG="seven-img"
-HUAYRA_IMG="gnu-img"
+WIN_IMG="seven-img"
+GNU_IMG="gnu-img"
 IMAGES_POINT="/home/rdisk/home/"
 
 . $DRBL_SCRIPT_PATH/sbin/drbl-conf-functions
@@ -39,11 +39,11 @@ swapon /dev/${ROOT_DISK}5
 
 echo "Restoring the Windows image"
 
-ocs-sr -g auto -e1 auto -nogui -b -e2 -r -j2 -k -p true restoreparts seven-img ${ROOT_DISK}2
+ocs-sr -g auto -e1 auto -nogui -b -e2 -r -j2 -k -p true restoreparts $WIN_IMG ${ROOT_DISK}2
 
 echo "Restoring the Huayra image"
 
-ocs-sr -g auto -e1 auto -nogui -b -e2 -r -j2 -k -p true restoreparts gnu-img ${ROOT_DISK}3
+ocs-sr -g auto -e1 auto -nogui -b -e2 -r -j2 -k -p true restoreparts $GNU_IMG ${ROOT_DISK}3
 
 echo.
 
