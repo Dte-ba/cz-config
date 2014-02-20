@@ -60,7 +60,7 @@ echo "${_DISK}3: extended $_from $_to"
 parted -a cylinder ${_DISK} --script -- unit MiB mkpart extended $_from $_to
 echo ""
 
-# save poit for recovery partition
+# save point for recovery partition
 _from_r=$(($_to+1))
 _to_r=$(($_from_r+$_rec_MiB))
 
@@ -83,6 +83,6 @@ echo ""
 # recovery partition
 echo "${_DISK}6: primary ext4 RECOVERY $_from_r $_TSIZE"
 parted ${_DISK} --script -- unit MiB mkpart primary ext4 $_from_r $_TSIZE
-parted ${_DISK} --script set 6 boot on
+parted ${_DISK} --script set 4 boot on
 mkfs.ext4 -L RECOVERY ${_DISK}4
 echo ""
