@@ -7,6 +7,6 @@ dialog \
 	--title "RESTAURAR Windows 7 y HUAYRA · GNU/LINUX" \ 
 	--yesno "Se restauraran los Sistemas Operativos Windows 7 y HUAYRA · GNU/Linux a la imagen original de PAD. La información que se encuentre en la partición de DATOS no sera modificada. Desea continuar?" 10 40 
 
-	if [ $? = "0" ] ; then
-		sh /root/restore-seven.sh ; sh /root/restore-gnu.sh ; sh /root/salir.sh
-	fi
+if [ $? = "0" ] ; then
+	sh /root/restore-seven.sh ; sh /root/restore-gnu.sh ; sh /root/salir.sh
+fi

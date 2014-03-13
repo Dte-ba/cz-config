@@ -7,6 +7,6 @@ dialog \
 	--title "TAREA FINALIZADA" \
 	--msgbox "SE REINICIARA EL EQUIPO " 5 30
 
-	if [ $? = "0" ] ; then
-		reset; reboot
-	fi
+if [ $? = "0" ] ; then
+	reset; reboot
+fi

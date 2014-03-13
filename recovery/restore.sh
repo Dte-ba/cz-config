@@ -7,8 +7,8 @@ dialog \
 	--title "ESTE AVISO ES IMPORTANTE" \ 
 	--yesno "Mediante esta herramienta Usted puede restaurar las particiones de los Sistemas Operativos a las imagenes originales de fabrica. La informacion que se encuentre en la particion de DATOS no sera modificada. Sin embargo cualquier dato que haya sido salvado en las particiones de los Sistemas Operativos se perdera definitivamente. Desea continuar?" 0 0 
 
-	if [ $? = "1" ] ; then
-		sh /root/salir.sh
-	 else
-		sh /root/menu.sh 
-	fi
+if [ $? = "1" ] ; then
+	sh /root/salir.sh
+ else
+	sh /root/menu.sh 
+fi

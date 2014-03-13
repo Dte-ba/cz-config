@@ -7,6 +7,6 @@ dialog \
 	--title "RESTAURAR WINDOWS 7" \
 	--yesno "Se restaurara el Sistema Operativo MICROSOFT WINDOWS 7 a la imagen original de fabrica. La información que se encuentre en la partición de DATOS no sera modificada. Desea continuar?" 10 40 
 
-	if [ $? = "0" ] ; then
-		sh /root/restore-img.sh "seven-img" "sda2" ; sh /root/salir.sh
-	fi
+if [ $? = "0" ] ; then
+	sh /root/restore-img.sh "seven-img" "sda2" ; sh /root/salir.sh
+fi
